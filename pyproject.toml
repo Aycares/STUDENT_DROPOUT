@@ -1,0 +1,14 @@
+[project]
+name = "student-dropout"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[all,ll]<=0.116.1",
+    "logfire[fastapi]>=4.3.3",
+    "pandas>=2.3.1",
+    "scikit-learn>=1.7.1",
+    "uvicorn>=0.35.0",
+    "zenml[server]==0.84.2",
+]
