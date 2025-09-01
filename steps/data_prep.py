@@ -22,18 +22,22 @@ def encode_step(data: pd.DataFrame) -> Tuple[
     This step encodes the dataset using label encoder
     and returns both the data and the encoder object.
     """
-    label_encoders = None
+    label_encoders = {}
     try:
-        label_encoders = {}
-        cat_cols = list(data.select_dtypes(include="object").columns)
+        # Encode all categorical columns except 'Target'
+        cat_cols = [col for col in data.select_dtypes(include="object").columns if col != "Target"]
         for column in cat_cols:
             encoder = LabelEncoder()
             data[column] = encoder.fit_transform(data[column])
             label_encoders[column] = encoder
+        # Encode 'Target' separately and save its encoder
+        if "Target" in data.columns:
+            target_encoder = LabelEncoder()
+            data["Target"] = target_encoder.fit_transform(data["Target"])
+            label_encoders["Target"] = target_encoder
         logger.info(f"Encoded data successfully. data types are:\n {data.info()}")
     except Exception as err:
         logger.error(f"An error occured. Detail: {err}")
-    
     return data, label_encoders
 
 @step
@@ -46,18 +50,16 @@ def split_dataset(data: pd.DataFrame) -> Tuple[
     try:
         X = data.drop(columns=['Target'])
         y = data['Target']
-        X_train, X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,
-                                                          random_state=23,stratify=y)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
+                                                           random_state=23, stratify=y)
         logger.info(f"Splitting completed with shape X_train: {X_train.shape}")
     except Exception as err:
         logger.error(f"An error occured. Detail: {err}")
-    
     return X_train, X_test, y_train, y_test
 
-
 @step
-def scale_dataset(X_train:pd.DataFrame,
-                  X_test:pd.DataFrame) -> Tuple[
+def scale_dataset(X_train: pd.DataFrame,
+                  X_test: pd.DataFrame) -> Tuple[
                       Annotated[Optional[pd.DataFrame], "Scaled X_train"],
                       Annotated[Optional[pd.DataFrame], "Scaled X_test"],
                       Annotated[Optional[StandardScaler], "Scaler Object"]]:
@@ -70,10 +72,8 @@ def scale_dataset(X_train:pd.DataFrame,
         X_test_scaled = scaler.transform(X_test)
         X_train_final = pd.DataFrame(X_train_scaled, columns=column_names)
         X_test_final = pd.DataFrame(X_test_scaled, columns=column_names)
-        
         logger.info("Scaling completed successfully!")
     except Exception as err:
         X_train_final, X_test_final = None, None
         logger.error(f"An error occured. Detail: {err}")
-        
     return X_train_final, X_test_final, scaler

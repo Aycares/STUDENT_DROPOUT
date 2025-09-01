@@ -12,14 +12,12 @@ class RootResponse(BaseModel):
 # create a model response object
 class ModelResponse(BaseModel):
     """
-    Creates a response object for the student dropout prediction model.
+    Response object for the student dropout prediction model.
     """
-    predicted_Target: int = Field(
+    predicted_Target: Literal["Dropout", "Enrolled", "Graduate"] = Field(
         ...,
-        description="Predicted target: 0 = Dropout, 1 = Enrolled, 2 = Graduate",
-        ge=0,
-        le=2,
-        example=[0, 1, 2]
+        description="Predicted Target: Dropout, Enrolled, or Graduate",
+        example="Graduate"
     )
 
     # Marital status application-mode application-order course daytime/evening attendance previous-qualification
@@ -40,10 +38,10 @@ class ModelRequest(BaseModel):
     Marital_status: int = Field(...,
                                 description="Marital status of the student: 0 = Single, 1 = Married, 2 = Divorced, 3 = Widowed",
                                 ge=0,le=3,example=1)
-    Application_Mode: int = Field(...,
+    Application_mode: int = Field(...,
                                   description="Application mode of the student: 1 = Online, 2 = In-person, 3 = Referral, 4 = Other",
                                   ge=1,le=4,example=1)
-    Application_Order: int = Field(...,
+    Application_order: int = Field(...,
                                    description="Application order of the student: Indicates the ranked preference (e.g., 1 = first choice, 2 = second choice, etc.)",
                                    ge=1,example=1)
     Course: int = Field(
@@ -60,10 +58,10 @@ class ModelRequest(BaseModel):
     le=20,
     example=9
 )
-    Daytime_Evening_Attendance: int = Field(...,
+    Daytime_evening_attendance: int = Field(...,
                                             description="Attendance type of the student: 0 = Daytime, 1 = Evening",
                                             ge=0,le=1,example=0)
-    Previous_Qualification: int = Field(
+    Previous_qualification: int = Field(
     ...,
     description="Previous qualification of the student: 1 = High school, 2 = Bachelor's degree, 3 = Master's degree, 4 = Other",
     ge=1,
@@ -73,88 +71,85 @@ class ModelRequest(BaseModel):
     Nacionality: int = Field(...,
                              description="Nationality of the student: 1 = Domestic, 2 = International, 3 = Other",
                              ge=1,le=3,example=1)
-    Mothers_Qualification: int = Field(...,
+    Mothers_qualification: int = Field(...,
                                        description="Mother's highest qualification: 1 = None, 2 = Primary education, 3 = Secondary education, 4 = Bachelor's degree, 5 = Master's degree, 6 = Doctorate, 7 = Other",
                                        ge=1,le=7,example=3)
-    Fathers_Qualification: int = Field(...,
+    Fathers_qualification: int = Field(...,
                                        description="Father's highest qualification: 1 = None, 2 = Primary education, 3 = Secondary education, 4 = Bachelor's degree, 5 = Master's degree, 6 = Doctorate, 7 = Other",
                                        ge=1,le=7,example=3)
-    Mothers_Occupation: int = Field(...,
+    Mothers_occupation: int = Field(...,
                                     description="Mother's occupation: 1 = Unemployed, 2 = Self-employed, 3 = Employed in private sector, 4 = Employed in public sector, 5 = Retired, 6 = Other",
                                     ge=1,le=6,example=3)
-    Father_Occupation: int = Field(...,
+    Father_occupation: int = Field(...,
                                    description="fathers's occupation: 1 = Unemployed, 2 = Self-employed, 3 = Employed in private sector, 4 = Employed in public sector, 5 = Retired, 6 = Other",
                                    ge=1,le=6,example=3)
     Displaced: int = Field(...,
                            description="Indicates if the student has been displaced: 0 = No, 1 = Yes",
                            ge=0,le=1,example=0)
-    Education_Special_Needs: int = Field(...,
+    Education_special_needs: int = Field(...,
                                          description="Indicates if the student has special educational needs: 0 = No, 1 = Yes",
                                          ge=0,le=1,example=0)
     Debtor: int = Field(...,
                         description="Indicates if the student has any outstanding debts: 0 = No, 1 = Yes",
                         ge=0,le=1,example=0)
-    Tuition_Fees_Up_To_Date: int = Field(...,
+    Tuition_fees_up_to_date: int = Field(...,
                                          description="Indicates if the student's tuition fees are paid up to date: 0 = No, 1 = Yes",
                                          ge=0,le=1,example=1)
     Gender: int = Field(...,
                         description="Gender of the student: 0 = Female, 1 = Male, 2 = Other",
                         ge=0,le=2,example=1)
-    Scholarship_Holder: int = Field(...,
+    Scholarship_holder: int = Field(...,
                                     description="Indicates if the student is a scholarship holder: 0 = No, 1 = Yes",
                                     ge=0,le=1,example=0)
-    Age_At_Enrollment: int = Field(...,
+    Age_at_enrollment: int = Field(...,
                                    description="Age of the student at the time of enrollment (in years)",
                                    ge=15,le=100,example=18)
     International: int = Field(...,
                                description="Indicates if the student is an international student: 0 = No, 1 = Yes",
                                ge=0,le=1,example=0)
-    Curricular_Units_1st_Sem_Credited: int = Field(...,
+    Curricular_units_1st_sem_credited: int = Field(...,
                                                    description="Number of curricular units credited in the 1st semester",
                                                    ge=0,le=50,example=0)
-    Curricular_Units_1st_Sem_Enrolled: int = Field(...,
+    Curricular_units_1st_sem_enrolled: int = Field(...,
                                                    description="Number of curricular units enrolled in the 1st semester",
                                                    ge=0,le=50,example=5)
-    Curricular_Units_1st_Sem_Evaluations: int = Field(...,
+    Curricular_units_1st_sem_evaluations: int = Field(...,
                                                       description="Number of curricular units evaluated in the 1st semester",
                                                       ge=0,le=50,example=5)
-    Curricular_Units_1st_Sem_Approved: int = Field(...,
+    Curricular_units_1st_sem_approved: int = Field(...,
                                                    description="Number of curricular units approved in the 1st semester",
                                                    ge=0,le=50,example=5)
-    Curricular_Units_1st_Sem_Grade: float = Field(...,
+    Curricular_units_1st_sem_grade: float = Field(...,
                                                   description="Average grade for curricular units in the 1st semester (0 to 20 scale)",
                                                   ge=0.0,le=20.0,example=14.5)
-    Curricular_Units_1st_Sem_Without_Evaluations: int = Field(...,
+    Curricular_units_1st_sem_without_evaluations: int = Field(...,
                                                               description="Number of curricular units in the 1st semester without evaluations",
                                                               ge=0,le=50,example=0)
-    Curricular_Units_2nd_Sem_Credited: int = Field(...,
+    Curricular_units_2nd_sem_credited: int = Field(...,
                                                    description="Number of curricular units credited in the 2nd semester",
                                                    ge=0,le=50,example=0)
-    Curricular_Units_2nd_Sem_Enrolled: int = Field(...,
+    Curricular_units_2nd_sem_enrolled: int = Field(...,
                                                    description="Number of curricular units enrolled in the 2nd semester",
                                                    ge=0,le=50,example=5)
-    Curricular_Units_2nd_Sem_Evaluations: int = Field(...,
+    Curricular_units_2nd_sem_evaluations: int = Field(...,
                                                       description="Number of curricular units evaluated in the 2nd semester",
                                                       ge=0,le=50,example=5)
-    Curricular_Units_2nd_Sem_Approved: int = Field(...,
+    Curricular_units_2nd_sem_approved: int = Field(...,
                                                    description="Number of curricular units approved in the 2nd semester",
                                                    ge=0,le=50,example=4)
-    Curricular_Units_2nd_Sem_Grade: float = Field(...,
+    Curricular_units_2nd_sem_grade: float = Field(...,
                                                   description="Average grade of curricular units in the 2nd semester (0.0 to 20.0 scale)",
                                                   ge=0.0,le=20.0,example=13.5)
-    Curricular_Units_2nd_Sem_Without_Evaluations: int = Field(...,
+    Curricular_units_2nd_sem_without_Evaluations: int = Field(...,
                                                               description="Number of curricular units in the 2nd semester without any evaluations",
                                                               ge=0,le=50,example=0)
-    Unemployment_Rate: float = Field(...,
+    Unemployment_rate: float = Field(...,
                                      description="Unemployment rate at the time of enrollment (percentage)",
                                      ge=0.0,le=100.0,example=7.5)
-    Inflation_Rate: float = Field(...,
+    Inflation_rate: float = Field(...,
                                   description="Inflation rate at the time of enrollment (percentage)",
                                   ge=-50.0,le=100.0,example=2.3)
     GDP: float = Field(...,
                        description="Gross Domestic Product (GDP) growth rate at the time of enrollment (in percentage)",
                        ge=-100.0,le=100.0,example=2.5)
-    
-    
-    
     
